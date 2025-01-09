@@ -33,6 +33,8 @@ void setup() {
 
   delay(1000);
 
+  initApp();
+
 }
 
 void loop() {
@@ -54,6 +56,16 @@ void runApp() {
   }
 }
 
+void initApp() {
+  Serial.println("Current app is: " + appNames[current_app - 1]);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.setRGB(255, 255, 0);
+  lcd.print(appNames[current_app - 1]);
+  delay(100);
+}
+
 void changeApp() {
   if(current_app == app_count) {
     current_app = 1;
@@ -61,14 +73,6 @@ void changeApp() {
   else {
     current_app++;
   }
-  Serial.println("Current app is: " + appNames[current_app - 1]);
-
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.setRGB(255, 255, 0);
-  lcd.print(appNames[current_app - 1]);
-  
-  delay(100);
 }
 
 void readSelBtn() {
