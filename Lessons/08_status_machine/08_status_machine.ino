@@ -21,7 +21,7 @@ unsigned long old_millis_led = 0;
 
 // app
 byte current_app = 1;  // 1: blink, 2: count, 3: sensor
-byte app_count = 3;
+byte app_count;
 
 // pot
 int pot_value = 0;  // 0 ... 4095
@@ -34,6 +34,8 @@ void setup() {
   pinMode(pin_led, OUTPUT);
 
   // init
+  app_count = sizeof(appNames)/sizeof(appNames[0]);
+
   lcd.begin(16, 2);
   lcd.setRGB(255, 255, 0);
   lcd.print("App store");
