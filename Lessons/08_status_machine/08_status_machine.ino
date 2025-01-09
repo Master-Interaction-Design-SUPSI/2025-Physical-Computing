@@ -7,6 +7,9 @@ byte pin_sel_btn = 11;   // selector button
 byte pin_led = 12;
 byte pin_pot = A0;
 
+// apps
+String appNames[] = {"blink", "count", "sensor"};
+
 // variables
 bool old_sel_btn_status = 0;
 byte current_app = 1;  // 1: blink, 2: count, 3: sensor
@@ -58,7 +61,14 @@ void changeApp() {
   else {
     current_app++;
   }
-  Serial.println("Current app is: " + String(current_app));
+  Serial.println("Current app is: " + appNames[current_app - 1]);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.setRGB(255, 255, 0);
+  lcd.print(appNames[current_app - 1]);
+  
+  delay(100);
 }
 
 void readSelBtn() {
