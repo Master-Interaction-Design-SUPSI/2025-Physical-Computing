@@ -26,8 +26,6 @@ byte app_count = 3;
 // pot
 int pot_value = 0;  // 0 ... 4095
 
-
-
 void setup() {
   Serial.begin(9600);
 
@@ -48,6 +46,7 @@ void setup() {
 
 void loop() {
   readSelBtn();
+  readSerial();
   runApp();
 }
 
