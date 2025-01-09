@@ -1,12 +1,35 @@
-int pin_sel_btn = 11;   // selector button
-bool old_sel_btn_status = 0;
+// libraries
+#include <rgb_lcd.h>
+rgb_lcd lcd;
 
-int current_app = 1;  // 1: blink, 2: count, 3: sensor
-int app_count = 3;
+// pinout
+byte pin_sel_btn = 11;   // selector button
+byte pin_led = 12;
+byte pin_pot = A0;
+
+// variables
+bool old_sel_btn_status = 0;
+byte current_app = 1;  // 1: blink, 2: count, 3: sensor
+byte app_count = 3;
+bool led_status = 0;  // 0: OFF, 1: ON
+int pot_value = 0;  // 0 ... 4095
+unsigned long old_millis_led = 0;
+
 
 void setup() {
   Serial.begin(9600);
+
+  // pinout
   pinMode(pin_sel_btn, INPUT);
+  pinMode(pin_led, OUTPUT);
+
+  // init
+  lcd.begin(16, 2);
+  lcd.setRGB(255, 255, 0);
+  lcd.print("App store");
+
+  delay(1000);
+
 }
 
 void loop() {
