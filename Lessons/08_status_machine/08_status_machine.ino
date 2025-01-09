@@ -8,7 +8,7 @@ byte pin_led = 12;
 byte pin_pot = A0;
 
 // apps
-String appNames[] = {"blink", "count", "sensor"};
+String appNames[] = {"Blink", "Count", "Sensor"};
 
 // variables
 
