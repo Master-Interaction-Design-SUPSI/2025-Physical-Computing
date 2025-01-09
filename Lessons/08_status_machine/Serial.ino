@@ -31,7 +31,3 @@ void decodeSerial(String msg) {
     Serial.println("Sorry, app not found!");
   }
 }
-
-
-
-
