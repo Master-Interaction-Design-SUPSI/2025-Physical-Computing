@@ -11,7 +11,21 @@ void setup() {
 
 void loop() {
   readSelBtn();
+  runApp();
+}
 
+void runApp() {
+  switch(current_app) {
+    case 1:
+      app1();
+      break;
+    case 2:
+      app2();
+      break;
+    case 3:
+      app3();
+      break;
+  }
 }
 
 void changeApp() {
