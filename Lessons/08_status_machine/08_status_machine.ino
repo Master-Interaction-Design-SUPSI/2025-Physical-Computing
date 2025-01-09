@@ -73,6 +73,7 @@ void changeApp() {
   else {
     current_app++;
   }
+  initApp();
 }
 
 void readSelBtn() {
