@@ -68,11 +68,17 @@ void runApp() {
 void initApp() {
   Serial.println("Current app is: " + appNames[current_app - 1]);
 
+  // lcd
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.setRGB(255, 255, 0);
   lcd.print(appNames[current_app - 1]);
   delay(100);
+
+  // LED
+  led_status = 0;
+  digitalWrite(pin_led, led_status);
+
 }
 
 void changeApp() {
