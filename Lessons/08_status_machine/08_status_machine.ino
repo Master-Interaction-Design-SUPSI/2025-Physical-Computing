@@ -11,12 +11,21 @@ byte pin_pot = A0;
 String appNames[] = {"blink", "count", "sensor"};
 
 // variables
+
+// button status
 bool old_sel_btn_status = 0;
+
+// led
+bool led_status = 0;  // 0: OFF, 1: ON
+unsigned long old_millis_led = 0;
+
+// app
 byte current_app = 1;  // 1: blink, 2: count, 3: sensor
 byte app_count = 3;
-bool led_status = 0;  // 0: OFF, 1: ON
+
+// pot
 int pot_value = 0;  // 0 ... 4095
-unsigned long old_millis_led = 0;
+
 
 
 void setup() {
