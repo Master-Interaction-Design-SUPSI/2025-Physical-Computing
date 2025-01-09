@@ -1,6 +1,12 @@
-String app2_name = "Count";
+unsigned int app2_count;
 
 void app2() {
-  // init
+  lcd.setCursor(0, 1);
+  lcd.print("                ");
+  lcd.setCursor(0, 1);
+  lcd.print(app2_count);
 
+  app2_count++;
+
+  delay(20);
 }
