@@ -10,11 +10,26 @@ void readSerial() {
 }
 
 void decodeSerial(String msg) {
+  bool match_found = false;
+  String app_name;
+
+  msg.toLowerCase();
+
   for(int i=0; i < app_count; i++) {
-    if(msg.equals(appNames[i])) {
+    app_name = appNames[i];
+    app_name.toLowerCase();
+    if(msg.equals(app_name)) {
+      match_found = true;
       current_app = i + 1;
-      initApp();
+      break;
     }
+  }
+
+  if(match_found) {
+    initApp();
+  }
+  else {
+    Serial.println("Sorry, app not found!");
   }
 }
 
