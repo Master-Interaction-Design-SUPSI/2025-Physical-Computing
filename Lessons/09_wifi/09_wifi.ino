@@ -16,15 +16,23 @@ const int dns_port = 53;
 AsyncWebServer webServer(80);
 WebSocketsServer webSocket = WebSocketsServer(8080);
 
+char msg_buffer[30];
+
 #include "index.h"
 #include "js.h"
 #include "css.h"
 
-
 // pinout
 int pin_button_on = 11;
 int pin_button_off = 10;
+int pin_pot = A0;
 
+// variables
+bool old_off_button = 0;
+bool old_on_button = 0;
+unsigned long old_millis_pot = 0;
+int pot_read_interval = 20;  // milliseconds
+int client_count = 0; // number of clients
 
 void setup() {
   Serial.begin(9600);
@@ -62,18 +70,50 @@ void setup() {
 
 void loop() {
   webSocket.loop();
-  readButtons();
-  delay(10);
+  readOnButton();
+  readOffButton();
+  readPot();
 }
 
-void readButtons() {
-  if(digitalRead(pin_button_on)) {
+
+void readOnButton() {
+  bool btn_val = digitalRead(pin_button_on);
+  if(btn_val == 1 && old_on_button == 0) { // rising edge
     Serial.println("Button ON pressed");
     digitalWrite(LED_BUILTIN, HIGH);
+    sendClientMessage("ON");
+    old_on_button = 1;
   }
-  else if(digitalRead(pin_button_off)) {
+  else if(btn_val == 0 && old_on_button == 1) { // falling edge
+    old_on_button = 0;
+  }
+}
+
+void readOffButton() {
+  bool btn_val = digitalRead(pin_button_off);
+  if(btn_val == 1 && old_off_button == 0) { // rising edge
     Serial.println("Button OFF pressed");
     digitalWrite(LED_BUILTIN, LOW);
+    sendClientMessage("OFF");
+    old_off_button = 1;
+  }
+  else if(btn_val == 0 && old_off_button == 1) { // falling edge
+    old_off_button = 0;
+  }
+}
+
+void readPot() {
+  if(millis() - old_millis_pot > pot_read_interval) {
+    int pot_value = map(analogRead(pin_pot), 0, 4095, 0, 100);
+    sendClientMessage(String(pot_value));
+    old_millis_pot = millis();
+  }
+}
+
+void sendClientMessage(String text) {
+  sprintf(msg_buffer, "%s", text);
+  for(int i=0; i<client_count; i++) {
+    webSocket.sendTXT(i, msg_buffer);
   }
 }
 
@@ -81,12 +121,14 @@ void webSocketEvents(uint8_t client_num, WStype_t type, uint8_t * payload, size_
   switch(type) {
     case WStype_DISCONNECTED:
       Serial.println(String(client_num) + " disconnected!");
+      client_count--;
       break;
     case WStype_CONNECTED:
       {
         IPAddress ip = webSocket.remoteIP(client_num);
         Serial.print(String(client_num) + " connected from IP ");
         Serial.println(ip.toString());
+        client_count++;
       }
       break;
     case WStype_TEXT:
@@ -99,14 +141,11 @@ void webSocketEvents(uint8_t client_num, WStype_t type, uint8_t * payload, size_
 void decodeMessage(String msg) {
   if(msg.equals("ON")) {
     digitalWrite(LED_BUILTIN, HIGH);
+    sendClientMessage("ON");
   }
   else if(msg.equals("OFF")) {
     digitalWrite(LED_BUILTIN, LOW);
+    sendClientMessage("OFF");
   }
 }
-
-
-
-
-
 
