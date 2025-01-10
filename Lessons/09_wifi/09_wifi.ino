@@ -33,6 +33,8 @@ void setup() {
     request->send(200, "text/html", indexHtml);
   });
 
+  webServer.begin();
+
 }
 
 void loop() {
