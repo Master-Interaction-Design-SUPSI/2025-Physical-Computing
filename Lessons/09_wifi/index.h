@@ -3,6 +3,7 @@ const char indexHtml[] PROGMEM = R"(
 <html>
   <head>
     <title>Arduino web page</title>
+    <script src="script.js" defer></script>
   </head>
   <body>
     <h1>Arduino web page</h1>

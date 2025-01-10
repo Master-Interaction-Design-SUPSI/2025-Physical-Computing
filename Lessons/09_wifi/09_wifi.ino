@@ -16,6 +16,8 @@ const int dns_port = 53;
 AsyncWebServer webServer(80);
 WebSocketsServer webSocket = WebSocketsServer(8080);
 
+#include "index.h"
+
 
 void setup() {
 
@@ -32,11 +34,46 @@ void setup() {
   webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/html", indexHtml);
   });
-
   webServer.begin();
+
+  // webSocket
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvents);
 
 }
 
 void loop() {
 
 }
+
+void onWebSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t length) {
+  switch(type) {
+    case WStype_DISCONNECTED:
+      Serial.println(String(client_num) + " disconnected!");
+      Serial.println("client_count:" + String(client_count));
+      break;
+    case WStype_CONNECTED:
+      {
+        IPAddress ip = webSocket.remoteIP(client_num);
+        Serial.print(String(client_num) + " connected from IP ");
+        Serial.println(ip.toString());
+        Serial.println("client_count:" + String(client_count));
+      }
+      break;
+    case WStype_TEXT:
+      String msg = String((char *)payload);
+      decodeMessage(msg);
+      break;
+  }
+}
+
+void decodeMessage(String msg) {
+
+
+}
+
+
+
+
+
+
