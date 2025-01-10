@@ -40,24 +40,25 @@ void setup() {
   webSocket.begin();
   webSocket.onEvent(webSocketEvents);
 
+  //pinout
+  pinMode(LED_BUILTIN, OUTPUT);
+
 }
 
 void loop() {
-
+  webSocket.loop();
 }
 
-void onWebSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size_t length) {
+void webSocketEvents(uint8_t client_num, WStype_t type, uint8_t * payload, size_t length) {
   switch(type) {
     case WStype_DISCONNECTED:
       Serial.println(String(client_num) + " disconnected!");
-      Serial.println("client_count:" + String(client_count));
       break;
     case WStype_CONNECTED:
       {
         IPAddress ip = webSocket.remoteIP(client_num);
         Serial.print(String(client_num) + " connected from IP ");
         Serial.println(ip.toString());
-        Serial.println("client_count:" + String(client_count));
       }
       break;
     case WStype_TEXT:
@@ -68,8 +69,12 @@ void onWebSocketEvent(uint8_t client_num, WStype_t type, uint8_t * payload, size
 }
 
 void decodeMessage(String msg) {
-  
-
+  if(msg.equals("ON")) {
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  else if(msg.equals("OFF")) {
+    digitalWrite(LED_BUILTIN, LOW);
+  }
 }
 
 
