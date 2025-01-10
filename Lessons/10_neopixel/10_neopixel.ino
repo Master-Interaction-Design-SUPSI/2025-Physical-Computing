@@ -23,7 +23,7 @@ void loop() {
   Serial.println("x: " + String(x_value) + ", y: " + String(y_value));
 
   int x_value_mapped = map(x_value, 950, 3020, 0, pixels_count-1);
-  int y_value_mapped = map(y_value, 960, 3010, 0, 255);
+  int y_value_mapped = map(y_value, 960, 3020, 0, 255);
 
   pixels.clear();
 
@@ -34,3 +34,4 @@ void loop() {
   pixels.show();
 
 }
+
