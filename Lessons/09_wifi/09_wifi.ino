@@ -20,6 +20,12 @@ WebSocketsServer webSocket = WebSocketsServer(8080);
 #include "js.h"
 #include "css.h"
 
+
+// pinout
+int pin_button_on = 11;
+int pin_button_off = 10;
+
+
 void setup() {
   Serial.begin(9600);
 
@@ -49,11 +55,26 @@ void setup() {
 
   //pinout
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(pin_button_on, INPUT);
+  pinMode(pin_button_off, INPUT);
 
 }
 
 void loop() {
   webSocket.loop();
+  readButtons();
+  delay(10);
+}
+
+void readButtons() {
+  if(digitalRead(pin_button_on)) {
+    Serial.println("Button ON pressed");
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  else if(digitalRead(pin_button_off)) {
+    Serial.println("Button OFF pressed");
+    digitalWrite(LED_BUILTIN, LOW);
+  }
 }
 
 void webSocketEvents(uint8_t client_num, WStype_t type, uint8_t * payload, size_t length) {
