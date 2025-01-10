@@ -17,10 +17,10 @@ AsyncWebServer webServer(80);
 WebSocketsServer webSocket = WebSocketsServer(8080);
 
 #include "index.h"
+#include "js.h"
 
 
 void setup() {
-
   Serial.begin(9600);
 
   // Wifi network
@@ -34,6 +34,10 @@ void setup() {
   webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/html", indexHtml);
   });
+  webServer.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/script", scriptJS);
+  });
+
   webServer.begin();
 
   // webSocket
