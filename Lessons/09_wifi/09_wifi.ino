@@ -18,7 +18,7 @@ WebSocketsServer webSocket = WebSocketsServer(8080);
 
 #include "index.h"
 #include "js.h"
-
+#include "css.h"
 
 void setup() {
   Serial.begin(9600);
@@ -36,6 +36,9 @@ void setup() {
   });
   webServer.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(200, "text/script", scriptJS);
+  });
+  webServer.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/css", styleCSS);
   });
 
   webServer.begin();
