@@ -2,6 +2,7 @@
   libraries to install:
   - WebSockets by Markus Sattler
   - ESPAsyncWebServer by Me-No-Dev
+  - Async TCP by Me-No-Dev
 */
 
 #include <WiFi.h>
@@ -20,11 +21,17 @@ void setup() {
 
   Serial.begin(9600);
 
+  // Wifi network
   WiFi.softAP(ssid, password);
   delay(2000);
   Serial.println("Access Point active!");
   Serial.print("Arduino IP address: ");
   Serial.println(WiFi.softAPIP());
+
+  // webServer
+  webServer.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(200, "text/html", indexHtml);
+  });
 
 }
 
