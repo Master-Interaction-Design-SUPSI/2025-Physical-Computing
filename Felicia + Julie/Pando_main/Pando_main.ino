@@ -1,3 +1,5 @@
+#include <Adafruit_Thermal.h>
+
 //library
 
 //Variable
