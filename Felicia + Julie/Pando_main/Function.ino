@@ -1,16 +1,4 @@
-bool btn_val = false;
-bool old_btn_val = false;
-int btn_pin = 11;
-int btn_status = 0;  // 0: OFF, 1: RISING EDGE, 2: ON; 3: FALLING EDGE
-int old_btn_status = -1;
-
-int count = 0;
-
-void setup() {
-	Serial.begin(9600);
-}
-
-void loop() {
+void readButton(int btn_pin, bool &btn_val, bool &old_btn_val, int &btn_status, int &old_btn_status){
 	btn_val = digitalRead(btn_pin);
 	
 	if(!btn_val && !old_btn_val) {
@@ -46,3 +34,4 @@ void loop() {
 		old_btn_status = btn_status;
 	}
 }
+
