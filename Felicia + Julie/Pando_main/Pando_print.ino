@@ -1,112 +1,114 @@
-#include <Adafruit_Thermal.h>
-/*------------------------------------------------------------------------
-  Example sketch for Adafruit Thermal Printer library for Arduino.
-  Demonstrates a few text styles & layouts, bitmap printing, etc.
+// /*------------------------------------------------------------------------
+//   Example sketch for Adafruit Thermal Printer library for Arduino.
+//   Demonstrates a few text styles & layouts, bitmap printing, etc.
 
-  IMPORTANT: DECLARATIONS DIFFER FROM PRIOR VERSIONS OF THIS LIBRARY.
-  This is to support newer & more board types, especially ones that don't
-  support SoftwareSerial (e.g. Arduino Due).  You can pass any Stream
-  (e.g. Serial1) to the printer constructor.  See notes below.
-  ------------------------------------------------------------------------*/
+//   IMPORTANT: DECLARATIONS DIFFER FROM PRIOR VERSIONS OF THIS LIBRARY.
+//   This is to support newer & more board types, especially ones that don't
+//   support SoftwareSerial (e.g. Arduino Due).  You can pass any Stream
+//   (e.g. Serial1) to the printer constructor.  See notes below.
+//   ------------------------------------------------------------------------*/
 
-#include "Adafruit_Thermal.h"
+// #include "Adafruit_Thermal.h"
+// // #include "adalogo.h"
+// // #include "adaqrcode.h"
 
-// Then see setup() function regarding serial & printer begin() calls.
 
-// Here's the syntax for hardware serial (e.g. Arduino Due) --------------
-// Un-comment the following line if using hardware serial:
+// Adafruit_Thermal printer(&Serial0);     // Pass addr to printer constructor
+// // Then see setup() function regarding serial & printer begin() calls.
 
-Adafruit_Thermal printer(&Serial0);      // Or Serial2, Serial3, etc.
+// // Here's the syntax for hardware serial (e.g. Arduino Due) --------------
+// // Un-comment the following line if using hardware serial:
 
-// -----------------------------------------------------------------------
+// //Adafruit_Thermal printer(&Serial1);      // Or Serial2, Serial3, etc.
 
-void setup() {
+// // -----------------------------------------------------------------------
 
-  // This line is for compatibility with the Adafruit IotP project pack,
-  // which uses pin 7 as a spare grounding point.  You only need this if
-  // wired up the same way (w/3-pin header into pins 5/6/7):
-  pinMode(7, OUTPUT); digitalWrite(7, LOW);
+// void setup() {
 
-  // NOTE: SOME PRINTERS NEED 9600 BAUD instead of 19200, check test page.
-  Serial0.begin(9600);  // Initialize SoftwareSerial
-  //Serial1.begin(19200); // Use this instead if using hardware serial
-  printer.begin();        // Init printer (same regardless of serial type)
+//   // This line is for compatibility with the Adafruit IotP project pack,
+//   // which uses pin 7 as a spare grounding point.  You only need this if
+//   // wired up the same way (w/3-pin header into pins 5/6/7):
+//   // pinMode(7, OUTPUT); digitalWrite(7, LOW);
 
-  // The following calls are in setup(), but don't *need* to be.  Use them
-  // anywhere!  They're just here so they run one time and are not printed
-  // over and over (which would happen if they were in loop() instead).
-  // Some functions will feed a line when called, this is normal.
+//   // NOTE: SOME PRINTERS NEED 9600 BAUD instead of 19200, check test page.
+//   Serial0.begin(9600);  // Initialize SoftwareSerial
+//   //Serial1.begin(19200); // Use this instead if using hardware serial
+//   printer.begin();        // Init printer (same regardless of serial type)
 
-  // Font options
-  printer.setFont('B');
-  printer.println("FontB");
-  printer.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  printer.setFont('A');
-  printer.println("FontA (default)");
-  printer.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+//   // The following calls are in setup(), but don't *need* to be.  Use them
+//   // anywhere!  They're just here so they run one time and are not printed
+//   // over and over (which would happen if they were in loop() instead).
+//   // Some functions will feed a line when called, this is normal.
 
-  // Test inverse on & off
-  printer.inverseOn();
-  printer.println(F("Inverse ON"));
-  printer.inverseOff();
+//   // Font options
+//   printer.setFont('B');
+//   printer.println("FontB");
+//   printer.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+//   printer.setFont('A');
+//   printer.println("FontA (default)");
+//   printer.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
-  // Test character double-height on & off
-  printer.doubleHeightOn();
-  printer.println(F("Double Height ON"));
-  printer.doubleHeightOff();
+//   // Test inverse on & off
+//   printer.inverseOn();
+//   printer.println(F("Inverse ON"));
+//   printer.inverseOff();
 
-  // Set text justification (right, center, left) -- accepts 'L', 'C', 'R'
-  printer.justify('R');
-  printer.println(F("Right justified"));
-  printer.justify('C');
-  printer.println(F("Center justified"));
-  printer.justify('L');
-  printer.println(F("Left justified"));
+//   // Test character double-height on & off
+//   printer.doubleHeightOn();
+//   printer.println(F("Double Height ON"));
+//   printer.doubleHeightOff();
 
-  // Test more styles
-  printer.boldOn();
-  printer.println(F("Bold text"));
-  printer.boldOff();
+//   // Set text justification (right, center, left) -- accepts 'L', 'C', 'R'
+//   printer.justify('R');
+//   printer.println(F("Right justified"));
+//   printer.justify('C');
+//   printer.println(F("Center justified"));
+//   printer.justify('L');
+//   printer.println(F("Left justified"));
 
-  printer.underlineOn();
-  printer.println(F("Underlined text"));
-  printer.underlineOff();
+//   // Test more styles
+//   printer.boldOn();
+//   printer.println(F("Bold text"));
+//   printer.boldOff();
 
-  printer.setSize('L');        // Set type size, accepts 'S', 'M', 'L'
-  printer.println(F("Large"));
-  printer.setSize('M');
-  printer.println(F("Medium"));
-  printer.setSize('S');
-  printer.println(F("Small"));
+//   printer.underlineOn();
+//   printer.println(F("Underlined text"));
+//   printer.underlineOff();
 
-  printer.justify('C');
-  printer.println(F("normal\nline\nspacing"));
-  printer.setLineHeight(50);
-  printer.println(F("Taller\nline\nspacing"));
-  printer.setLineHeight(); // Reset to default
-  printer.justify('L');
+//   printer.setSize('L');        // Set type size, accepts 'S', 'M', 'L'
+//   printer.println(F("Large"));
+//   printer.setSize('M');
+//   printer.println(F("Medium"));
+//   printer.setSize('S');
+//   printer.println(F("Small"));
 
-  // Barcode examples:
-  // CODE39 is the most common alphanumeric barcode:
-  printer.printBarcode("ADAFRUT", CODE39);
-  printer.setBarcodeHeight(100);
-  // Print UPC line on product barcodes:
-  printer.printBarcode("123456789123", UPC_A);
+//   printer.justify('C');
+//   printer.println(F("normal\nline\nspacing"));
+//   printer.setLineHeight(50);
+//   printer.println(F("Taller\nline\nspacing"));
+//   printer.setLineHeight(); // Reset to default
+//   printer.justify('L');
 
-  // Print the 75x75 pixel logo in adalogo.h:
-  printer.printBitmap(adalogo_width, adalogo_height, adalogo_data);
+//   // Barcode examples:
+//   // CODE39 is the most common alphanumeric barcode:
+//   printer.printBarcode("ADAFRUT", CODE39);
+//   printer.setBarcodeHeight(100);
+//   // Print UPC line on product barcodes:
+//   printer.printBarcode("123456789123", UPC_A);
 
-  // Print the 135x135 pixel QR code in adaqrcode.h:
-  printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
-  printer.println(F("Adafruit!"));
-  printer.feed(2);
+//   // Print the 75x75 pixel logo in adalogo.h:
+//   printer.printBitmap(adalogo_width, adalogo_height, adalogo_data);
 
-  printer.sleep();      // Tell printer to sleep
-  delay(3000L);         // Sleep for 3 seconds
-  printer.wake();       // MUST wake() before printing again, even if reset
-  printer.setDefault(); // Restore printer to defaults
-}
+//   // Print the 135x135 pixel QR code in adaqrcode.h:
+//   printer.printBitmap(adaqrcode_width, adaqrcode_height, adaqrcode_data);
+//   printer.println(F("Adafruit!"));
+//   printer.feed(2);
 
-void loop() {
-}
+//   printer.sleep();      // Tell printer to sleep
+//   // delay(3000L);         // Sleep for 3 seconds
+//   printer.wake();       // MUST wake() before printing again, even if reset
+//   printer.setDefault(); // Restore printer to defaults
+// }
 
+// void loop() {
+// }

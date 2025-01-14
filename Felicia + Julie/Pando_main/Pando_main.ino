@@ -18,19 +18,29 @@ int btn_right_status = 0;
 int old_btn_right_status = -1;
 int count_right = 0;
 
+int randNumber;
 
 
 void setup() {
 	Serial.begin(9600);
 
+  randomSeed(analogRead(0));
+
   //set up button
   pinMode(btn_left_pin, INPUT);
   pinMode(btn_right_pin, INPUT);
+
 }
 
 void loop() {
-  readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
-  readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
+  
+  bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
+  bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
+
+  // Selecting message to print
+  getMessage(btn_left, btn_right, false);
+
+  // Printing the message
 }
 
 

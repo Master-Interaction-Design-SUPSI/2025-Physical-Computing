@@ -1,4 +1,4 @@
-void readButton(int btn_pin, bool &btn_val, bool &old_btn_val, int &btn_status, int &old_btn_status){
+bool readButton(int btn_pin, bool &btn_val, bool &old_btn_val, int &btn_status, int &old_btn_status){
 	btn_val = digitalRead(btn_pin);
 	
 	if(!btn_val && !old_btn_val) {
@@ -17,21 +17,23 @@ void readButton(int btn_pin, bool &btn_val, bool &old_btn_val, int &btn_status, 
 	}
 	
 	if(btn_status != old_btn_status) {
+
+    old_btn_status = btn_status;
+
 		switch(btn_status) {
 			case 0:
 				Serial.println("OFF");
-				break;
+				return false;
 			case 1:
 				Serial.println("RISING EDGE");
-				break;
+				return false;
 			case 2:
 				Serial.println("ON");
-				break;
+        return true;
 			case 3:
 				Serial.println("FALLING EDGE");
-				break;
+				return false;
 		}
-		old_btn_status = btn_status;
 	}
 }
 
