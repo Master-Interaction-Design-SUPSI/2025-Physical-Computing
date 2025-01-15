@@ -20,6 +20,13 @@ int count_right = 0;
 
 int randNumber;
 
+//LED 
+#include <Adafruit_NeoPixel.h>
+int led_status = false; 
+int pixels_count = 24;
+byte pixels_pin = 6; // its actually pin nr. 3 on the arudino board
+Adafruit_NeoPixel pixels(pixels_count, pixels_pin, NEO_GRB + NEO_KHZ800);
+
 
 void setup() {
 	Serial.begin(9600);
@@ -91,7 +98,7 @@ void eyeClose(){
 }
 
 void eyeOpen(){
-  servo.write(180);
+  servo.write(90);
   delay(500);
 }
 
