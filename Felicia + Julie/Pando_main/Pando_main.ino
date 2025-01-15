@@ -4,6 +4,7 @@
 #ifdef __AVR__
 #include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
 #endif
+#include <ESP32Servo.h>
 
 
 // VARIABLES
@@ -23,7 +24,10 @@ int btn_right_status = 0;
 int old_btn_right_status = -1;
 int count_right = 0;
 
-int currentState = 0;
+// servo
+Servo servo;
+
+enum { INIT, READY, LEFT, RIGHT, BOTH, STANDBY, QUOTE} state = INIT;
 int randNumber;
 
 // NeoPixel strips
@@ -32,21 +36,18 @@ int randNumber;
 // int led_status = false;
 // int pixels_count = 24;
 // byte pixels_pin = 6;  // its actually pin nr. 3 on the arduino board
-// Adafruit_NeoPixel pixels(pixels_count, pixels_pin, NEO_GRB + NEO_KHZ800);
+
+// Pin and LED count for the first NeoPixel strip
+#define LED_PIN_1 6
+#define LED_COUNT_1 24
+
+// Pin and LED count for the second NeoPixel strip
+#define LED_PIN_2 9
+#define LED_COUNT_2 24
 
 // Declare NeoPixel strip objects
 Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip2(LED_COUNT_2, LED_PIN_2, NEO_GRB + NEO_KHZ800);
-
-// Pin and LED count for the first NeoPixel strip
-#define LED_PIN_1    6
-#define LED_COUNT_1 24
-
-// Pin and LED count for the second NeoPixel strip
-#define LED_PIN_2    9
-#define LED_COUNT_2 24
-
-
 
 void setup() {
   Serial.begin(9600);
@@ -84,43 +85,43 @@ void setup() {
   strip2.setBrightness(50);
 }
 
-void loop() {
+// void loop() {
 
-  //ultra sonic distance sensor
-  //if (lox.isRangeComplete()) {
-  //  Serial.print("Distance in mm: ");
-  //  Serial.println(lox.readRange());
-  //}
+//   //ultra sonic distance sensor
+//   //if (lox.isRangeComplete()) {
+//   //  Serial.print("Distance in mm: ");
+//   //  Serial.println(lox.readRange());
+//   //}
 
-  //if (ultrasonic_distance >= 15 && ultrasonic_distance <= 20 && led_status == false){
-  //  Serial.println("I am activated");
-  //  lightNeutral();  //TODO: i need to make it light up gently
-  //  led_status = true;
-  //}
+//   //if (ultrasonic_distance >= 15 && ultrasonic_distance <= 20 && led_status == false){
+//   //  Serial.println("I am activated");
+//   //  lightNeutral();  //TODO: i need to make it light up gently
+//   //  led_status = true;
+//   //}
 
-  // buttons
-  bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
-  bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
+//   // buttons
+//   bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
+//   bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
 
-  // NeoPixel
-  if (btn_left_status = 2 && btn_left_status = 2) {
-    theaterChaseSync(strip1, strip2, strip1.Color(127, 127, 127), 50);
-    rainbowSync(strip1, strip2, 10);
-  }
+//   // NeoPixel
+//   if (btn_left_status == 2 && btn_right_status == 2) {
+//     theaterChaseSync(strip1, strip2, strip1.Color(127, 127, 127), 50);
+//     rainbowSync(strip1, strip2, 10);
+//   }
 
-  if (btn_left_status = 2) {
-    lightGreen();
-  }
+//   if (btn_left_status == 2) {
+//     lightGreen();
+//   }
 
-  if (btn_right_status = 2) {
-    lightRed();
-  }
+//   if (btn_right_status == 2) {
+//     lightRed();
+//   }
 
-  // // Selecting message to print
-  // getMessage(btn_left, btn_right, false);
+//   // // Selecting message to print
+//   // getMessage(btn_left, btn_right, false);
 
-  // // Printing the message
-}
+//   // // Printing the message
+// }
 
 
 void eyeClose() {
@@ -134,42 +135,91 @@ void eyeOpen() {
 }
 
 void lightNeutral() {
-  pixels.clear();
+  strip1.clear();
+  strip2.clear();
 
   for (int i = 0; i < LED_COUNT_1; i++) {
-    pixels.setPixelColor(i, pixels.Color(255, 255, 255));
+    strip1.setPixelColor(i, strip1.Color(255, 255, 255));
+    strip2.setPixelColor(i, strip2.Color(255, 255, 255));
   }
-  pixels.show();
+  strip1.show();
+  strip2.show();
 }
 
 void lightRed() {
-  pixels.clear();
+  strip1.clear();
+  strip2.clear();
 
   for (int i = 0; i < LED_COUNT_2; i++) {
-    pixels.setPixelColor(i, pixels.Color(255, 0, 0));
+    strip1.setPixelColor(i, strip1.Color(255, 0, 0));
+    strip2.setPixelColor(i, strip2.Color(255, 0, 0));
   }
-  pixels.show();
+  strip1.show();
+  strip2.show();
 }
 
 void lightGreen() {
-  pixels.clear();
+  strip1.clear();
+  strip2.clear();
 
   for (int i = 0; i < LED_COUNT_2; i++) {
-    pixels.setPixelColor(i, pixels.ColorHSV(0, 255, 0));
+    strip1.setPixelColor(i, strip1.ColorHSV(0, 255, 0));
+    strip2.setPixelColor(i, strip2.ColorHSV(0, 255, 0));
   }
-  pixels.show();
+  strip1.show();
+  strip2.show();
 }
 
+
+bool readButton(int btn_pin, bool &btn_val, bool &old_btn_val, int &btn_status, int &old_btn_status){
+	btn_val = digitalRead(btn_pin);
+	
+	if(!btn_val && !old_btn_val) {
+		btn_status = 0;  // OFF
+	}
+	else if(btn_val && !old_btn_val) {
+		btn_status = 1;  // RISING EDGE
+    old_btn_val = 1;
+	}
+	else if(btn_val && old_btn_val) {
+		btn_status = 2;  // ON
+	}
+	else if(!btn_val && old_btn_val) {
+		btn_status = 3;  // FALLING EDGE
+    old_btn_val = 0;
+	}
+	
+	if(btn_status != old_btn_status) {
+
+    old_btn_status = btn_status;
+
+		switch(btn_status) {
+			case 0:
+				Serial.println("OFF");
+				return false;
+			case 1:
+				Serial.println("RISING EDGE");
+				return false;
+			case 2:
+				Serial.println("ON");
+        return true;
+			case 3:
+				Serial.println("FALLING EDGE");
+				return false;
+		}
+	}
+}
 
 
 void loop() {
 
-  void stateMachine() {
-    switch (currentState) {
-      case 0:  // init
+  // void stateMachine() {
+    switch (state) {
+      case INIT: {
         // if we detect motion go to 1
         break;
-      case 1:  // ready
+      }
+      case READY: {
         // lightNeutral
         // eyeOpen
         // soundReady
@@ -177,26 +227,28 @@ void loop() {
         bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
         bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
 
-        if (btnLeft && btnRight) {
-          currentState = 2;
+        if (btn_left && btn_right) {
+          state = BOTH;
         }
-        if (btnLeft & != btnRight) {  // ??? will this work?
-          currentState = 3;
+        if (btn_left != btn_right) {  // ??? will this work?
+          state = LEFT;
         }
-        if (btnRight) {
+        if (btn_right) {
         }
+      }
         // after delay, go to case 5
-      case 2:  // left
+      case LEFT: {
                // lightRed
                // soundLeft
                // counterLeft ++
                // print from String btnLeft[]
-        andNumber = random(0, sizeof(btnLeft) / sizeof(btnLeft[0]));
+        randNumber = random(0, sizeof(btnLeft) / sizeof(btnLeft[0]));
         Serial.println(btnLeft[randNumber]);
 
-        currentState = 1;  // goes back to ready, for presentation purposes
+        currentState = READY;  // goes back to ready, for presentation purposes
         break;
-      case 3:  // right
+      }
+      case RIGHT: {
                // lightGreen
                // soundRight
                // counterRight ++
@@ -204,9 +256,10 @@ void loop() {
         randNumber = random(0, sizeof(btnRight) / sizeof(btnRight[0]));
         Serial.println(btnRight[randNumber]);
 
-        currentState = 1;  // goes back to ready, for presentation purposes
+        currentState = READY;  // goes back to ready, for presentation purposes
         break;
-      case 4:  // both
+      }
+      case BOTH: {
                // lightShow
                // soundShow
                // print from String btnBoth[]
@@ -214,22 +267,24 @@ void loop() {
         randNumber = random(0, sizeof(btnBoth) / sizeof(btnBoth[0]));
         Serial.println(btnBoth[randNumber]);
 
-        currentState = 5; // first part of the presentation is done, goes to stand-by
+        currentState = STANDBY; // first part of the presentation is done, goes to stand-by
 
         break;
-      case 5:  // stand-by
+       }
+      case STANDBY: {
                // light off
                // eyeClose
                // after delay, go to case 6
 
         break;
-      case 6: // printing motivational quote
+      }
+      case QUOTE: { // printing motivational quote
               // eyeOpen
               // print from String quoteTime[]
 
         break;
     }
-  }
+  // }
 
   // Selecting message to print
   getMessage(btn_left, btn_right, false);
