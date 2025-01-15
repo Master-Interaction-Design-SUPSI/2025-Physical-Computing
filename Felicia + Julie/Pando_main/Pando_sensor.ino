@@ -14,24 +14,13 @@ void loop() {
   if (lox.isRangeComplete()) {
     Serial.print("Distance in mm: ");
     Serial.println(lox.readRange());
-
-
-
-void loop() {
-  if (lox.isRangeComplete()) {
-    Serial.print("Distance in mm: ");
-    Serial.println(lox.readRange());
-  }
-}
-
-
+  
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 
 //#define XSHUT 11
 
 void setup() {
   Serial.begin(115200);
-
 
     // wait until serial port opens for native USB devices
   while (! Serial) {
