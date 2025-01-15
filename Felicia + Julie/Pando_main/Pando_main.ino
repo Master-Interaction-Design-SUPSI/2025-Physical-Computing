@@ -71,7 +71,7 @@ void loop() {
 
 
   if (btn_left_status = 2 && btn_left_status = 2){
-    lightShw();
+    lightShow();
 
   }
 
