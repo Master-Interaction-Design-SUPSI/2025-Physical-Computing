@@ -62,6 +62,22 @@ void loop() {
   bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
   bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
 
+
+  if (btn_left_status = 2 && btn_left_status = 2){
+    lightShw();
+
+  }
+
+  if (btn_left_status = 2 ){
+    lightGreen();
+
+  }
+
+  if (btn_right_status = 2){
+    lightRed();
+
+  }
+
   // Selecting message to print
   getMessage(btn_left, btn_right, false);
 
