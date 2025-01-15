@@ -5,6 +5,7 @@
 
 String btnLeft[] = { "YAY! You did it! You\’re basically unstoppable.", "High-five through the airwaves! Pando is so proud of you!", "Woohoo! Green lights all the way, legend. Let\’s keep this streak going!", "You\’re on fire (in a good way)! Keep smashing those goals!" };
 String btnRight[] = { "A", "HB", "C", "G" };
+
 String btnTime[] = { "1", "2", "3", "4" };
 String btnBoth[] = { "Red", "Blue", "Green" };
 

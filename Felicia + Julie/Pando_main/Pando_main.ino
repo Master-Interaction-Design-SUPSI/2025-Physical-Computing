@@ -24,6 +24,19 @@ int randNumber;
 void setup() {
 	Serial.begin(9600);
 
+  ///distance sensor
+  //while (! Serial) {
+  //  delay(1);
+  //}
+//
+  //Serial.println("Adafruit VL53L0X test.");
+  //if (!lox.begin(0x30)) {
+  //  Serial.println(F("Failed to boot VL53L0X"));
+  //  while(1);
+  //}
+  //// start continuous ranging
+  //lox.startRangeContinuous();
+
   randomSeed(analogRead(0));
 
   //set up button
@@ -33,6 +46,18 @@ void setup() {
 }
 
 void loop() {
+
+  //ultra sonic distance sensor
+  //if (lox.isRangeComplete()) {
+  //  Serial.print("Distance in mm: ");
+  //  Serial.println(lox.readRange());
+  //}
+
+  //if (ultrasonic_distance >= 15 && ultrasonic_distance <= 20 && led_status == false){
+  //  Serial.println("I am activated");
+  //  lightNeutral();  //TODO: i need to make it light up gently 
+  //  led_status = true; 
+  //}
   
   bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
   bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
@@ -43,4 +68,41 @@ void loop() {
   // Printing the message
 }
 
+
+void eyeClose(){
+  servo.write(0);
+  delay(500);
+}
+
+void eyeOpen(){
+  servo.write(180);
+  delay(500);
+}
+
+void lightNeutral(){
+  pixels.clear();
+
+   for(int i=0; i<pixels_count; i++) {
+      pixels.setPixelColor(i, pixels.Color(255, 255, 255));
+  }
+  pixels.show();
+}
+
+void lightRed(){
+  pixels.clear();
+
+   for(int i=0; i<pixels_count; i++) {
+      pixels.setPixelColor(i, pixels.Color(255, 0, 0));
+  }
+  pixels.show();
+}
+
+void lightGreen(){
+  pixels.clear();
+
+   for(int i=0; i<pixels_count; i++) {
+      pixels.setPixelColor(i, pixels.ColorHSV(0, 255, 0));
+  }
+  pixels.show();
+}
 
