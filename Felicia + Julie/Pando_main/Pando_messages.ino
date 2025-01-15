@@ -6,7 +6,7 @@
 String btnLeft[] = { "YAY! You did it! You\’re basically unstoppable.", "High-five through the airwaves! Pando is so proud of you!", "Woohoo! Green lights all the way, legend. Let\’s keep this streak going!", "You\’re on fire (in a good way)! Keep smashing those goals!" };
 String btnRight[] = { "A", "HB", "C", "G" };
 
-String btnTime[] = { "1", "2", "3", "4" };
+String quoteTime[] = { "1", "2", "3", "4" };
 String btnBoth[] = { "Red", "Blue", "Green" };
 
 String getMessage(bool btn_left, bool btn_right, bool btn_time) {
@@ -25,10 +25,10 @@ String getMessage(bool btn_left, bool btn_right, bool btn_time) {
     Serial.println(btnRight[randNumber]);
     return btnRight[randNumber];
   }
-  if (btnTime) {
-    randNumber = random(0, sizeof(btnTime) / sizeof(btnTime[0]));
-    Serial.println(btnTime[randNumber]);
-    return btnTime[randNumber];
+  if (quoteTime) {
+    randNumber = random(0, sizeof(quoteTime) / sizeof(quoteTime[0]));
+    Serial.println(quoteTime[randNumber]);
+    return quoteTime[randNumber];
   }
 }
 
