@@ -11,10 +11,10 @@ String btnBoth[] = { "Red", "Blue", "Green" };
 
 String getMessage(bool btn_left, bool btn_right, bool btn_time) {
   if (btnLeft && btnRight) {
-      randNumber = random(0, sizeof(btnBoth) / sizeof(btnBoth[0]));
-      Serial.println(btnBoth[randNumber]);
-      return btnBoth[randNumber];
-    }
+    randNumber = random(0, sizeof(btnBoth) / sizeof(btnBoth[0]));
+    Serial.println(btnBoth[randNumber]);
+    return btnBoth[randNumber];
+  }
   if (btnLeft) {
     randNumber = random(0, sizeof(btnLeft) / sizeof(btnLeft[0]));
     Serial.println(btnLeft[randNumber]);
@@ -35,7 +35,7 @@ String getMessage(bool btn_left, bool btn_right, bool btn_time) {
 
 
 // yay you're great
-// Y: 20      N: 10
+// Y:20       N: 10
 
 // Adafruit_Thermal printer(&Serial0);
 // void printMessage(bool btn_left, bool btn_right, bool btn_time) {
