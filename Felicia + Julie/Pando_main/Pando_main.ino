@@ -2,35 +2,34 @@
 #include <Adafruit_Thermal.h>
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
-#include <avr/power.h>  // Required for 16 MHz Adafruit Trinket
+#include <avr/power.h> 
 #endif
 #include <ESP32Servo.h>
 #include <Wire.h>
 
 // VARIABLES
 
-// button
+// Buttons
 bool btn_left_val = false;
 bool old_btn_left_val = false;
 int btn_left_pin = 11;
 int btn_left_status = 0;  // 0: OFF, 1: RISING EDGE, 2: ON; 3: FALLING EDGE
 int old_btn_left_status = -1;
-int count_left = 0;
 
 bool btn_right_val = false;
 bool old_btn_right_val = false;
 int btn_right_pin = 12;
 int btn_right_status = 0;
 int old_btn_right_status = -1;
+
+// Counter
+int count_left = 0;
 int count_right = 0;
 
-// for the quote function
-long quote_time = 0;
-long last_quote_time = 0;
-
-// // servo
+// Servo motor
 Servo servo;
 
+// Cases
 enum { INIT,
        READY,
        LEFT,
@@ -40,22 +39,18 @@ enum { INIT,
        QUOTE,
        OFF } state = INIT;
 int randNumber;
+
+// For the QUOTE case (motivational message print)
+long quote_time = 0;
+long last_quote_time = 0;
+
 // NeoPixel strips
-
-// Julie's initial code
-// int led_status = false;
-// int pixels_count = 24;
-// byte pixels_pin = 6;  // its actually pin nr. 3 on the arduino board
-
-// Pin and LED count for the first NeoPixel strip
 #define LED_PIN_1 6
 #define LED_COUNT_1 24
 
-// Pin and LED count for the second NeoPixel strip
 #define LED_PIN_2 9
 #define LED_COUNT_2 24
 
-// Declare NeoPixel strip objects
 Adafruit_NeoPixel strip1(LED_COUNT_1, LED_PIN_1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel strip2(LED_COUNT_2, LED_PIN_2, NEO_GRB + NEO_KHZ800);
 
@@ -65,7 +60,7 @@ void setup() {
 
   randomSeed(analogRead(0));
 
-  // set up button
+  // buttons
   pinMode(btn_left_pin, INPUT);
   pinMode(btn_right_pin, INPUT);
 
@@ -81,10 +76,13 @@ void setup() {
   strip2.begin();
   strip2.show();
   strip2.setBrightness(50);
+
+  // Servo motor
+  servo.attach(9);
 }
 
-// void loop() {
-
+//   This is code related to the touch sensor that doesn't work
+//   >>>
 //   //ultra sonic distance sensor
 //   //if (lox.isRangeComplete()) {
 //   //  Serial.print("Distance in mm: ");
@@ -95,28 +93,18 @@ void setup() {
 //   //  Serial.println("I am activated");
 //   //  lightNeutral();  //TODO: i need to make it light up gently
 //   //  led_status = true;
-//   //}
-
-//   // buttons
-//   bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
-//   bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
-
-// Selecting message to print
-//   // getMessage(btn_left, btn_right, false);
-
-//   // // Printing the message
-// }
 
 
-// void eyeClose() {
-//   servo.write(0);
-//   delay(500);
-// }
+// Eyelids
+void eyeOpen() {
+servo.write(90);
+delay(1000);
+}
 
-// void eyeOpen() {
-//   servo.write(90);
-//   delay(500);
-// }
+void eyeClose() {
+servo.write(0);
+delay(500);
+}
 
 void lightNeutral() {
   strip1.clear();
@@ -134,7 +122,7 @@ void lightRed() {
   strip1.clear();
   strip2.clear();
 
-  for (int i = 0; i < LED_COUNT_2; i++) {
+  for (int i = 0; i < LED_COUNT_1; i++) {
     strip1.setPixelColor(i, strip1.Color(255, 0, 0));
     strip2.setPixelColor(i, strip2.Color(255, 0, 0));
   }
@@ -146,9 +134,9 @@ void lightGreen() {
   strip1.clear();
   strip2.clear();
 
-  for (int i = 0; i < LED_COUNT_2; i++) {
-    strip1.setPixelColor(i, strip1.ColorHSV(0, 255, 0));
-    strip2.setPixelColor(i, strip2.ColorHSV(0, 255, 0));
+  for (int i = 0; i < LED_COUNT_1; i++) {
+    strip1.setPixelColor(i, strip1.Color(0, 255, 0));
+    strip2.setPixelColor(i, strip2.Color(0, 255, 0));
   }
   strip1.show();
   strip2.show();
@@ -156,66 +144,81 @@ void lightGreen() {
 
 void loop() {
 
-  quote_time += millis();
-  if (last_quote_time - quote_time >= 1000 * 10) {
-    state = QUOTE;
-  }
+  // this code doesn't work yet because i haven't figured out the math
+  // >>
+  // quote_time += millis();
+  // if (last_quote_time == 0 && millis() >= 1000 * 50) {
+  // state = QUOTE;
+  // }
+  // else if (quote_time - last_quote_time >= 1000 * 50) {
+  //   state = QUOTE;
+  // }
+
   bool btn_left = readButton(btn_left_pin, btn_left_val, old_btn_left_val, btn_left_status, old_btn_left_status);
   bool btn_right = readButton(btn_right_pin, btn_right_val, old_btn_right_val, btn_right_status, old_btn_right_status);
+
+  if (btn_left_status == 1 || btn_left_status == 2) {
+  lightGreen();
+  }
+
+  if (btn_right_status == 1 || btn_right_status == 2) {
+  lightRed();
+  }
 
   switch (state) {
     case INIT:
       Serial.println("Waiting for motion sensor");
       delay(1000);
       // {
-      // if we detect motion go to 1
+      // to add: if we detect motion go to case READY
       // motion sensor doesn't work
       state = READY;
       break;
     // }
     case READY:
-      // Serial.println("READY");
+      Serial.println("READY");
+      // to add: soundReady();
       lightNeutral();  // {
-      // eyeOpen
-      // soundReady
-      // we read the buttons
-
+      eyeOpen();
+      // reading the buttons
       if (btn_left && btn_right) {
+        Serial.println("Both buttons pressed.");
         state = BOTH;
-      } else if (btn_left) {  // ??? will this work?
+      } else if (btn_left) { 
+        Serial.println("left button is pressed.");
         state = LEFT;
       } else if (btn_right) {
+        Serial.println("right buttons pressed.");
         state = RIGHT;
       }
       // }
-      // after delay, go to case 5
+      // to add: after delay / prolonged inactivity, go to case STANDBY
       break;
 
-    case LEFT:  // {
+    case LEFT:  
+    {
       lightRed();
+      delay(50);
       // soundLeft();
       count_left++;
-      // print from String btnLeft[]
-      // randNumber = random(0, sizeof(btnLeft) / sizeof(btnLeft[0]));
-      // Serial.println(btnLeft[randNumber]);
-
+      String message = getMessage(true, false, false);
+      Serial.println(message);
       state = READY;  // goes back to ready, for presentation purposes
       break;
 
-    // }
+    }
     case RIGHT:
       {
         lightGreen();
+        delay(50);
         // soundRight();
         count_right++;
-        // print from String btnRight[]
-        // randNumber = random(0, sizeof(btnRight) / sizeof(btnRight[0]));
-        // Serial.println(btnRight[randNumber]);
-
+        String message = getMessage(false, true, false);
+        Serial.println(message);
         state = READY;  // goes back to ready, for presentation purposes
-      }
-      break;
+        break;
 
+      }
 
     case BOTH:
       {
@@ -235,23 +238,21 @@ void loop() {
       strip2.clear();
       strip1.show();
       strip2.show();
-      // eyeClose
-      Serial.println("hi");
-      delay(2000);
-      state = QUOTE;
-
+      Serial.println("standby");
+      eyeClose();
       break;
       // }
 
     case QUOTE:
       {
         // { // printing motivational quote
-        // eyeOpen
+        eyeOpen();
         // print from String quoteTime[]
         last_quote_time = quote_time;
         quote_time = 0;
         String message = getMessage(false, false, true);
         Serial.println(message);
+        Serial.println("q");
         state = OFF;
       }
       break;
@@ -261,6 +262,7 @@ void loop() {
       strip2.clear();
       strip1.show();
       strip2.show();
+      Serial.println("OFF");
       // eyesclose
       break;
   }

@@ -1,4 +1,4 @@
-// NeoPixel
+// NeoPixel strips lightshow
 void lightShow() {
   theaterChaseSync(strip1, strip2, strip1.Color(127, 127, 127), 50);
   rainbowSync(strip1, strip2, 10);

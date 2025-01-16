@@ -3,7 +3,7 @@
 // #include "adalogo.h"
 // #include "adaqrcode.h"
 
-String btnLeft[] = { "YAY! You did it! You\’re basically unstoppable.", "High-five through the airwaves! Pando is so proud of you!", "Woohoo! Green lights all the way, legend. Let\’s keep this streak going!", "You\’re on fire (in a good way)! Keep smashing those goals!" };
+String btnLeft[] = { "YAY! You did it! You\’re basically unstoppable.", "High-five through the airwaves! Pando is so proud of you!", "Woohoo! Green lights all the way, legend. Let\’s keep this streak going!", "You\’re on fire (in a good way)! Keep smashing those goals!", "Yas! You\’re killing it, champ.", "Panda-tastic! You\’re right on track!", "Panda ears, big cheers!", "Bamboo-tastic! Keep that streak alive!", "Paws up for you, superstar!", "Go you! Pando is blushing with pride!", "You did the thing! Panda proud!", "Pando is blushing because you\’re amazing!" };
 String btnRight[] = { "A", "HB", "C", "G" };
 
 String quoteTime[] = { "1", "2", "3", "4" };
